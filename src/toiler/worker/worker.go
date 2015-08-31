@@ -1,7 +1,7 @@
 package worker
 
 import (
-	"github.com/jeslyvarghese/liza/src/worker/request"
+	"github.com/jeslyvarghese/liza/src/toiler/request"
 )
 
 type WorkerProcedure func(string, int64, int64)

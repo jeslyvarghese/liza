@@ -1,8 +1,8 @@
 package dispatcher
 
 import (
-	"github.com/jeslyvarghese/liza/src/worker/worker"
-	"github.com/jeslyvarghese/liza/src/worker/request"
+	"github.com/jeslyvarghese/liza/src/toiler/worker"
+	"github.com/jeslyvarghese/liza/src/toiler/request"
 )
 
 var WorkerQueue chan chan request.Request

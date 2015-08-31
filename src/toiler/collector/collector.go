@@ -1,7 +1,7 @@
 package collector
 
 import (
-	"github.com/jeslyvarghese/liza/src/worker/request"
+	"github.com/jeslyvarghese/liza/src/toiler/request"
 )
 
 var WorkQueue = make(chan request.Request, 100)
