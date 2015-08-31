@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+type UploadCallback func(err error, isSuccess bool)
+
 func UploadImage(fileURL, fileName, containerName string) bool {
 	cDallas := swift.Connection{
 		UserName: "teliportme",
