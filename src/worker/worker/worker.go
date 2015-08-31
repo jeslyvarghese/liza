@@ -1,4 +1,4 @@
-package workers
+package worker
 
 import (
 	"github.com/jeslyvarghese/liza/src/worker/request"
@@ -6,7 +6,7 @@ import (
 
 type WorkerProcedure func(string, int64, int64)
 
-func NewWorker(id int, workerQueue chan chan request.Request) Worker {
+func New(id int, workerQueue chan chan request.Request) Worker {
 	worker := Worker{
 		ID:          id,
 		Work:        make(chan request.Request),
