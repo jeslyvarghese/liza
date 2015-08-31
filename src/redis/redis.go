@@ -35,7 +35,7 @@ func init() {
 }
 
 func GetURL(URL string) (string, bool) {
-	hashString := ComputeHmac256(URL, "url_secret")
+	hashString := computeHmac256(URL, "url_secret")
 	c := POOL.Get()
 	defer c.Close()
 	log.Println(hashString)
@@ -51,7 +51,7 @@ func GetURL(URL string) (string, bool) {
 }
 
 func AddURL(URL, imageURL string) bool {
-	hashString := ComputeHmac256(URL, "url_secret")
+	hashString := computeHmac256(URL, "url_secret")
 	c := POOL.Get()
 	defer c.Close()
 	log.Println("Key hash ", hashString)
@@ -86,7 +86,7 @@ func GetJob() (string, bool) {
 	return "", false
 }
 
-func ComputeHmac256(message string, secret string) string {
+func computeHmac256(message string, secret string) string {
 	key := []byte(secret)
 	h := hmac.New(sha256.New, key)
 	h.Write([]byte(message))
