@@ -13,7 +13,7 @@ func DownloadImage(downloadURL, destImagePath string, callback DownloadCallBack)
 	resp, err := http.Get(downloadURL)
 	if err != nil {
 		log.Fatalln("Error downloading from URL: ", downloadURL, "\nbecause: ", err)
-		callback(err, false)
+		callback(err, false, "")
 	}
 	defer func() {
 		if err := resp.Body.Close(); err != nil {
@@ -23,7 +23,7 @@ func DownloadImage(downloadURL, destImagePath string, callback DownloadCallBack)
 	file, err := os.Create(destImagePath)
 	if err != nil {
 		log.Fatalln("Failed to create write file for download URL: ", downloadURL, "\nbecause: ", destImagePath)
-		callback(err, false)
+		callback(err, false, "")
 	}
 	defer func() {
 		if err := file.Close(); err != nil {
@@ -32,7 +32,7 @@ func DownloadImage(downloadURL, destImagePath string, callback DownloadCallBack)
 	}()
 	if bytesCopied, err := io.Copy(file, resp.Body); err != nil {
 		log.Fatalln("Failed to copy data for download url: ", downloadURL, " to ", destImagePath, "\nbecause: ", err)
-		callback(err, false, nil)
+		callback(err, false, "")
 	} else {
 		log.Println("Download successful from ", downloadURL, "to ", destImagePath, " ", bytesCopied, " bytes written.")
 		callback(nil, true, destImagePath)
