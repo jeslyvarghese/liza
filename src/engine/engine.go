@@ -11,6 +11,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"strconv"
+	"fmt"
 )
 
 func CheckHasImage(imageURL string) (string bool) {
@@ -20,42 +22,50 @@ func CheckHasImage(imageURL string) (string bool) {
 func DownloadImage(imageURL string, callback urlops.DownloadCallBack) bool {
 	u, err := url.Parse(imageURL)
 	if err != nil {
-		log.Fatalln("Unable to parse url: ", imageURL, "\nerror: ", err)
+		log.Println("Unable to parse url: ", imageURL, "\nerror: ", err)
+		return false
 	}
 	host := u.Host
 	path := u.Path
 	dirPath := "/tmp" + path[0:len(path)-len(filepath.Ext(path))]
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
-		log.Fatalln("Unable to create directories: ", dirPath, "\ncause:", err)
+		log.Println("Unable to create directories: ", dirPath, "\ncause:", err)
+		return false
 	}
 	destImagePath := dirPath + filepath.Base(path)
 	urlops.DownloadImage(imageURL, destImagePath, callback)
+	return true
 }
 
-func ResizeImage(imagePath string, width, height int64) (string bool) {
-	filePath = imagePath[0 : len(imagePath)-len(filepath.Base(imagePath))]
-	if err := os.MkdirAll(filepath, 0777); err != nil {
-		log.Fatalln("Could not create directories: ", filepath, "\nerror: ", err)
+func ResizeImage(imagePath, imageURL string) (string, bool) {
+	parsedURL, _ := url.Parse(imageURL)
+	width, _ := strconv.Atoi(parsedURL.Query().Get("width"))
+	height, _ := strconv.Atoi(parsedURL.Query().Get("height"))
+	imageFilePath := imagePath[0 : len(imagePath)-len(filepath.Base(imagePath))]
+	if err := os.MkdirAll(imageFilePath, 0777); err != nil {
+		log.Fatalln("Could not create directories: ", imageFilePath, "\nerror: ", err)
 	}
-	dstImagePath := filePath + fmt.Sprintf("%dx%d", width, height)
+	dstImagePath := imageFilePath + fmt.Sprintf("%dx%d", width, height)
 	success := vips.ResizeImage(imagePath, dstImagePath, width, height)
 	if success {
+		janitor.DeleteFile(imagePath)
 		return dstImagePath, success
 	} else {
 		return "", success
 	}
 }
 
-func UploadImage(imagePath string) {
+func UploadImage(imagePath string, callback rackspace.UploadCallback) {
 	fileName := strings.Replace(imagePath[len("/tmp/"):len(imagePath)], "/", "", -1)
+	cdnURL := "https://03188cc7126169c646ce-4ec321cd871e45e74b11708f248e0363.ssl.cf1.rackcdn.com"
 	containerName := "merlin"
 	go func() {
 		if isSuccess := rackspace.UploadImage(imagePath, fileName, containerName); isSuccess != true {
-			rackspace.UploadCallback(nil, false)
+			rackspace.UploadCallback(nil, false, nil)
 		} else {
-			rackspace.UploadCallback(nil, true)
+			rackspace.UploadCallback(nil, true, cdnURL+fileName)
+			janitor.DeleteFile(imagePath)
 		}
-
 	}()
 }
 
