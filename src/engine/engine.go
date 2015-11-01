@@ -15,7 +15,7 @@ import (
 	"fmt"
 )
 
-func CheckHasImage(imageURL string) (string bool) {
+func CheckHasImage(imageURL string) (string, bool) {
 	return redis.GetURL(imageURL)
 }
 
@@ -27,7 +27,7 @@ func DownloadImage(imageURL string, callback urlops.DownloadCallBack) bool {
 	}
 	host := u.Host
 	path := u.Path
-	dirPath := "/tmp" + path[0:len(path)-len(filepath.Ext(path))]
+	dirPath := "/tmp" + host + "/" + path[0:len(path)-len(filepath.Ext(path))]
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
 		log.Println("Unable to create directories: ", dirPath, "\ncause:", err)
 		return false
@@ -61,9 +61,9 @@ func UploadImage(imagePath string, callback rackspace.UploadCallback) {
 	containerName := "merlin"
 	go func() {
 		if isSuccess := rackspace.UploadImage(imagePath, fileName, containerName); isSuccess != true {
-			rackspace.UploadCallback(nil, false, nil)
+			callback(nil, false, "")
 		} else {
-			rackspace.UploadCallback(nil, true, cdnURL+fileName)
+			callback(nil, true, cdnURL+fileName)
 			janitor.DeleteFile(imagePath)
 		}
 	}()
