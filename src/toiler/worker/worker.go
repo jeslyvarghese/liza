@@ -31,7 +31,6 @@ func (w Worker) Start(p WorkerProcedure) {
 			case work := <-w.Work:
 				p(work.URL, work.Width, work.Height)
 			case <-w.QuitChan:
-
 				return
 			}
 		}
