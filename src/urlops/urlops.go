@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-type DownloadCallBack func(err error, isSuccess bool)
+type DownloadCallBack func(err error, isSuccess bool, destImagePath string)
 
 func DownloadImage(downloadURL, destImagePath string, callback DownloadCallBack) {
 	resp, err := http.Get(downloadURL)
@@ -32,9 +32,9 @@ func DownloadImage(downloadURL, destImagePath string, callback DownloadCallBack)
 	}()
 	if bytesCopied, err := io.Copy(file, resp.Body); err != nil {
 		log.Fatalln("Failed to copy data for download url: ", downloadURL, " to ", destImagePath, "\nbecause: ", err)
-		callback(err, false)
+		callback(err, false, nil)
 	} else {
 		log.Println("Download successful from ", downloadURL, "to ", destImagePath, " ", bytesCopied, " bytes written.")
-		callback(nil, true)
+		callback(nil, true, destImagePath)
 	}
 }
