@@ -9,7 +9,7 @@ import (
 
 type DownloadCallBack func(error, bool, string)
 
-func DownloadImage(downloadURL, destImagePath string, callback DownloadCallBack) {
+func DownloadImage(downloadURL, destImagePath string, callback func(error, bool, string)) {
 	resp, err := http.Get(downloadURL)
 	if err != nil {
 		log.Fatalln("Error downloading from URL: ", downloadURL, "\nbecause: ", err)
