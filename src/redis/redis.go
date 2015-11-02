@@ -44,8 +44,14 @@ func GetURL(URL string) (string, bool) {
 		return "", false
 	} else {
 		urlString, _ := redisDriver.String(urlInterface, err)
-		log.Println("Redis entry found: ", urlString)
-		return urlString, true
+		if len(urlString) > 0 {
+			log.Println("Redis entry found: ", urlString)
+			return urlString, true
+		} else {
+			log.Println("No redis entry found: ", urlString)
+			return "", false
+		}
+
 	}
 	return "", false
 }
