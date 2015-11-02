@@ -19,7 +19,7 @@ func CheckHasImage(imageURL string) (string, bool) {
 	return redis.GetURL(imageURL)
 }
 
-func DownloadImage(imageURL string, callback urlops.DownloadCallBack) bool {
+func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 	u, err := url.Parse(imageURL)
 	if err != nil {
 		log.Println("Unable to parse url: ", imageURL, "\nerror: ", err)
