@@ -48,12 +48,12 @@ func UploadImage(fileURL, fileName, containerName string) bool {
 		return false
 	}
 	if _, err := fDallas.Write(d); err != nil {
-		log.Println("Failed to write file to rackspace", err)
+		log.Println("Failed to write file to rackspace Dallas server", err)
 		return false
 	}
-	if _, err := fHKNG.Write(d); err != nil {
-		log.Println("Failed to write file to rackspace", err)
-		return false
-	}
+	// if _, err := fHKNG.Write(d); err != nil {
+	// 	log.Println("Failed to write file to rackspace HongKong server", err)
+	// 	return false
+	// }
 	return true
 }
