@@ -23,21 +23,21 @@ func ResizeImage(srcImagePath, dstImagePath string, width, height int) bool {
 	inBuf, _ := ioutil.ReadAll(f)
 	buf, err := vips.Resize(inBuf, options)
 	if err != nil {
-		log.Fatalln("VIPS Error:", err)
+		log.Println("VIPS Error:", err)
 		return false
 	}
 	of, err := os.Create(dstImagePath)
 	if err != nil {
-		log.Fatalln("Failed to open file to write to:", dstImagePath, " because: ", err)
+		log.Println("Failed to open file to write to:", dstImagePath, " because: ", err)
 		return false
 	}
 	defer func() {
 		if err := of.Close(); err != nil {
-			log.Fatalln("Failed to close file: ", dstImagePath, " because: ", err)
+			log.Println("Failed to close file: ", dstImagePath, " because: ", err)
 		}
 	}()
 	if _, err := of.Write(buf); err != nil {
-		log.Fatalln("Failed to write to file: ", dstImagePath, "because: ", err)
+		log.Println("Failed to write to file: ", dstImagePath, "because: ", err)
 		return false
 	}
 	return true
