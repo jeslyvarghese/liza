@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-type DownloadCallBack func(err error, isSuccess bool, destImagePath string)
+type DownloadCallBack func(error, bool, string)
 
 func DownloadImage(downloadURL, destImagePath string, callback DownloadCallBack) {
 	resp, err := http.Get(downloadURL)
