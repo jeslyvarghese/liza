@@ -1,11 +1,13 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/jeslyvarghese/liza/src/engine.go"
+	"github.com/jeslyvarghese/liza/src/engine"
+	"github.com/jeslyvarghese/liza/src/urlops"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"encoding/json"
 )
 
 type ResponseData struct {
@@ -19,32 +21,36 @@ func main() {
 	}
 	defer f.Close()
 	log.SetOutput(f)
-
-	r := mux.NewRouter()
-	r.HandleFunc("/resize", resize)
-	http.ListenAndServe(8080, nil)
+	http.HandleFunc("/resize", resize)
+	http.ListenAndServe(":8080", nil)
 }
 
 func resize(w http.ResponseWriter, r *http.Request) {
-	imageURL =  url.QueryUnescape(r.URL.Query().Get("imageURL"))
+	imageURL, _ :=  url.QueryUnescape(r.URL.Query().Get("imageURL"))
 	var response ResponseData
-	if optimisedImageURL, hasOptimisedImageURL = engine.CheckHasImage(imageURL); hasOptimisedImageURL {
+	if optimisedImageURL, hasOptimisedImageURL := engine.CheckHasImage(imageURL); hasOptimisedImageURL {
+		log.Println("Sending optimised image")
 		response = newResponseData(optimisedImageURL, imageURL)
 	} else {
-		engine.DownloadImage(imageURL, func(err error, isSuccess bool, destImagePath string) {
+		var downloadImageCallBack urlops.DownloadCallBack
+		log.Println("Creating optimised image")
+		response = newResponseData(optimisedImageURL, imageURL)
+		downloadImageCallBack = func(err error, isSuccess bool, destImagePath string) {
 			if isSuccess {
 				imagePath, isResized := engine.ResizeImage(destImagePath, imageURL)
+				log.Println("Resized imagePath:", imagePath)
 				if isResized {
-					engine.UploadImage(imagePath, func(err error, isSuccess, uploadImageURL string){
+					engine.UploadImage(imagePath, func(err error, isSuccess bool, uploadImageURL string){
 						if isSuccess {
 							engine.AddImage(imageURL, uploadImageURL)	
 						}
 						})
 				}
 			}
-		})
+		}
+		engine.DownloadImage(imageURL, downloadImageCallBack)
 	}
-	writeResponse(w, response)
+	writeResponse(&w, response)
 }
 
 func newResponseData(optimisedImageURL, originalImageURL string) ResponseData {
@@ -58,6 +64,7 @@ func writeResponse(w *http.ResponseWriter, responseData ResponseData) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	w.Header().Add("Content-Type", "application/json; charset=utf-8")
-	w.Write(responseString)
+	
+	(*w).Header().Add("Content-Type", "application/json; charset=utf-8")
+	(*w).Write(responseString)
 }
