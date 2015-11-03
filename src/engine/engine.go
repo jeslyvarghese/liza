@@ -33,6 +33,7 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 		return false
 	}
 	destImagePath := dirPath + filepath.Base(path)
+	log.Println("DownloadImage path assigned:", destImagePath)
 	urlops.DownloadImage(imageURL, destImagePath, callback)
 	return true
 }
