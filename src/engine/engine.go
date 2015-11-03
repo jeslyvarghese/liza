@@ -7,7 +7,7 @@ import (
 	"github.com/jeslyvarghese/liza/src/vips"
 	"math/rand"
 	"time"
-	// "github.com/jeslyvarghese/liza/src/janitor"
+	"github.com/jeslyvarghese/liza/src/janitor"
 	"log"
 	"net/url"
 	"os"
@@ -27,9 +27,9 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 		log.Println("Unable to parse url: ", imageURL, "\nerror: ", err)
 		return false
 	}
-	host := u.Host
+	// host := u.Host
 	path := u.Path
-	hl := int(math.Min(5., float64(len(host))))
+	// hl := int(math.Min(5., float64(len(host))))
 	dirPath := "/tmp/" + RandomString(5) + path[0:len(path)-len(filepath.Base(path))]
 	log.Println("Dir path for downloads: ", dirPath)
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
