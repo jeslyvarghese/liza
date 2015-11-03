@@ -7,7 +7,7 @@ import (
 	"github.com/jeslyvarghese/liza/src/vips"
 	"math/rand"
 	"time"
-	"github.com/jeslyvarghese/liza/src/janitor"
+	// "github.com/jeslyvarghese/liza/src/janitor"
 	"log"
 	"net/url"
 	"os"
@@ -75,7 +75,7 @@ func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) 
 		return
 	}
 	u, _ := url.Parse(imageURL)
-	fileName := RandomString(5)+"/"+u.Path[0:len(u.Path)-len(filepath.Ext(u.Path))]+"/"+filepath.Base(imagePath)
+	fileName := RandomString(5)+u.Path[0:len(u.Path)-len(filepath.Ext(u.Path))]+"/"+filepath.Base(imagePath)
 	log.Println("Rackspace filepath:", fileName)
 	cdnURL := "https://03188cc7126169c646ce-4ec321cd871e45e74b11708f248e0363.ssl.cf1.rackcdn.com/"
 	containerName := "merlin"
@@ -84,7 +84,7 @@ func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) 
 			callback(nil, false, "")
 		} else {
 			callback(nil, true, cdnURL+fileName)
-			janitor.DeleteFile(imagePath)
+			// janitor.DeleteFile(imagePath)
 		}
 	}()
 }
