@@ -32,7 +32,8 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 		log.Println("Unable to create directories: ", dirPath, "\ncause:", err)
 		return false
 	}
-	destImagePath := dirPath + filepath.Base(path)[0:math.Min(10, len(filepath.Base(path)))] + filepath.Ext(path)
+	l := math.Min(10, len(filepath.Base(path)))
+	destImagePath := dirPath + filepath.Base(path)[0:l] + filepath.Ext(path)
 	log.Println("DownloadImage path assigned:", destImagePath)
 	urlops.DownloadImage(imageURL, destImagePath, callback)
 	return true
