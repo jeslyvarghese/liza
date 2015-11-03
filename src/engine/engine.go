@@ -27,7 +27,8 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 	}
 	host := u.Host
 	path := u.Path
-	dirPath := "/tmp/" + host + path[0:len(path)-len(filepath.Base(path))]
+	hl := int(math.Min(10., float64(len(host))))
+	dirPath := "/tmp/" + host[0:hl] + path[0:len(path)-len(filepath.Base(path))]
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
 		log.Println("Unable to create directories: ", dirPath, "\ncause:", err)
 		return false
