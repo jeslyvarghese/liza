@@ -61,7 +61,7 @@ func ResizeImage(imagePath, imageURL string) (string, bool) {
 	log.Println("Writing to path:",dstImagePath)
 	success := vips.ResizeImage(imagePath, dstImagePath, width, height)
 	if success {
-		janitor.DeleteFile(imagePath)
+		// janitor.DeleteFile(imagePath)
 		return dstImagePath, success
 	} else {
 		return "", success
