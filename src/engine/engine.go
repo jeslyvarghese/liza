@@ -12,6 +12,7 @@ import (
 	"strings"
 	"strconv"
 	"fmt"
+	"math"
 )
 
 func CheckHasImage(imageURL string) (string, bool) {
@@ -31,7 +32,7 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 		log.Println("Unable to create directories: ", dirPath, "\ncause:", err)
 		return false
 	}
-	destImagePath := dirPath + filepath.Base(path)[0:4] + filepath.Ext(path)
+	destImagePath := dirPath + filepath.Base(path)[0:math.Min(10, len(filepath.Base(path)))] + filepath.Ext(path)
 	log.Println("DownloadImage path assigned:", destImagePath)
 	urlops.DownloadImage(imageURL, destImagePath, callback)
 	return true
