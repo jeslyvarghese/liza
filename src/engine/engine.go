@@ -5,7 +5,7 @@ import (
 	"github.com/jeslyvarghese/liza/src/redis"
 	"github.com/jeslyvarghese/liza/src/urlops"
 	"github.com/jeslyvarghese/liza/src/vips"
-	"github.com/jeslyvarghese/liza/src/janitor"
+	// "github.com/jeslyvarghese/liza/src/janitor"
 	"log"
 	"net/url"
 	"os"
@@ -81,7 +81,7 @@ func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) 
 			callback(nil, false, "")
 		} else {
 			callback(nil, true, cdnURL+fileName)
-			janitor.DeleteFile(imagePath)
+			// janitor.DeleteFile(imagePath)
 		}
 	}()
 }
