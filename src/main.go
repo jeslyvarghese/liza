@@ -40,6 +40,7 @@ func resize(w http.ResponseWriter, r *http.Request) {
 				imagePath, isResized := engine.ResizeImage(destImagePath, imageURL)
 				log.Println("Resized imagePath:", imagePath)
 				if isResized {
+					log.Println("Uploading to rackspace:", imagePath)
 					engine.UploadImage(imagePath, func(err error, isSuccess bool, uploadImageURL string){
 						if isSuccess {
 							engine.AddImage(imageURL, uploadImageURL)	
