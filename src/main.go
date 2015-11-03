@@ -20,7 +20,7 @@ func main() {
 	if err != nil {
 	}
 	defer f.Close()
-	log.SetOutput(f)
+	// log.SetOutput(f)
 	http.HandleFunc("/resize", resize)
 	http.ListenAndServe(":9060", nil)
 }
