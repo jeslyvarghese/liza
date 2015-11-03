@@ -19,6 +19,7 @@ func CheckHasImage(imageURL string) (string, bool) {
 }
 
 func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
+	log.Println("Downloading Image:", destImagePath)
 	u, err := url.Parse(imageURL)
 	if err != nil {
 		log.Println("Unable to parse url: ", imageURL, "\nerror: ", err)
