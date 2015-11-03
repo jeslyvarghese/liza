@@ -5,7 +5,7 @@ import (
 	"github.com/jeslyvarghese/liza/src/redis"
 	"github.com/jeslyvarghese/liza/src/urlops"
 	"github.com/jeslyvarghese/liza/src/vips"
-	"math/time"
+	"math/rand"
 	"time"
 	// "github.com/jeslyvarghese/liza/src/janitor"
 	"log"
