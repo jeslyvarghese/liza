@@ -22,7 +22,7 @@ func main() {
 	defer f.Close()
 	log.SetOutput(f)
 	http.HandleFunc("/resize", resize)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":9060", nil)
 }
 
 func resize(w http.ResponseWriter, r *http.Request) {
