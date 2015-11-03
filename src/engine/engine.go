@@ -34,7 +34,7 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 		log.Println("Unable to create directories: ", dirPath, "\ncause:", err)
 		return false
 	}
-	l := int(math.Min(5, float64(len(filepath.Base(path)))))
+	l := int(math.Min(10, float64(len(filepath.Base(path)))))
 	destImagePath := dirPath + filepath.Base(path)[0:l] + filepath.Ext(path)
 	log.Println("DownloadImage path assigned:", destImagePath)
 	urlops.DownloadImage(imageURL, destImagePath, callback)
@@ -42,6 +42,10 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 }
 
 func ResizeImage(imagePath, imageURL string) (string, bool) {
+	if _, err := os.Stat(imagePath); os.IsNotExist(err) {
+		log.Println("Could not find downloaded image", imagePath)
+		return "", false
+	}
 	parsedURL, _ := url.Parse(imageURL)
 	width, _ := strconv.Atoi(parsedURL.Query().Get("width"))
 	height, _ := strconv.Atoi(parsedURL.Query().Get("height"))
@@ -62,6 +66,11 @@ func ResizeImage(imagePath, imageURL string) (string, bool) {
 }
 
 func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) {
+	if _, err := os.Stat(imagePath); os.IsNotExist(err) {
+		log.Println("Could not find resizedImage image", imagePath)
+		callback(nil, false, "")
+		return
+	}
 	u, _ := url.Parse(imageURL)
 	fileName := u.Host+u.Path
 	log.Println("Rackspace filepath:", fileName)
