@@ -5,6 +5,8 @@ import (
 	"github.com/jeslyvarghese/liza/src/redis"
 	"github.com/jeslyvarghese/liza/src/urlops"
 	"github.com/jeslyvarghese/liza/src/vips"
+	"math/time"
+	"time"
 	// "github.com/jeslyvarghese/liza/src/janitor"
 	"log"
 	"net/url"
@@ -35,8 +37,9 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 		return false
 	}
 	l := int(math.Min(7, float64(len(filepath.Base(path)))))
-	destImagePath := dirPath + filepath.Base(path)[0:l] + filepath.Base(path)[len(filepath.Base(path))-l:len(filepath.Base(path))] + filepath.Ext(path)
+	destImagePath := dirPath + filepath.Base(path)[0:l] + filepath.Base(path)[len(filepath.Base(path))-l:len(filepath.Base(path))] + RandomString(5) + filepath.Ext(path)
 	log.Println("DownloadImage path assigned:", destImagePath)
+	log.Println("Path has length:", len(destImagePath))
 	urlops.DownloadImage(imageURL, destImagePath, callback)
 	return true
 }
@@ -88,4 +91,14 @@ func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) 
 
 func AddImage(requestURL, imageURL string) bool {
 	return redis.AddURL(requestURL, imageURL)
+}
+
+func RandomString(strlen int) string {
+	rand.Seed(time.Now().UTC().UnixNano())
+	const chars = "abcdefghijklmnopqrstuvwxyz0123456789"
+	result := make([]byte, strlen)
+	for i := 0; i < strlen; i++ {
+		result[i] = chars[rand.Intn(len(chars))]
+	}
+	return string(result)
 }
