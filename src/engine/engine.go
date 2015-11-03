@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"github.com/jeslyvarghese/liza/src/janitor"
 	"github.com/jeslyvarghese/liza/src/rackspace"
 	"github.com/jeslyvarghese/liza/src/redis"
 	"github.com/jeslyvarghese/liza/src/urlops"

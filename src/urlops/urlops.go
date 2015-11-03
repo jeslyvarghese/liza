@@ -12,6 +12,7 @@ type DownloadCallBack func(error, bool, string)
 func DownloadImage(downloadURL, destImagePath string, callback func(error, bool, string)) {
 		//check if file already exist, if so just return true
 	if _, err := os.Stat(destImagePath); os.IsExist(err) {
+		log.Println("Image already downloaded", destImagePath)
 		callback(nil, true, destImagePath)
 		return
 	}

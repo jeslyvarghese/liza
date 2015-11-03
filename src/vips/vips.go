@@ -18,7 +18,6 @@ func ResizeImage(srcImagePath, dstImagePath string, width, height int) bool {
 		Crop:    false,
 		Enlarge: false,
 		Extend:  vips.EXTEND_WHITE,
-		PreserveRatio: true,
 		Interpolator: vips.NOHALO,
 		Gravity:      vips.CENTRE,
 		Quality:      90,
