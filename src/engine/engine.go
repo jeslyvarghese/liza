@@ -60,8 +60,10 @@ func ResizeImage(imagePath, imageURL string) (string, bool) {
 	}
 }
 
-func UploadImage(imagePath string, callback rackspace.UploadCallback) {
-	fileName := strings.Replace(imagePath[len("/tmp/"):len(imagePath)], "/", "", -1)
+func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) {
+	u, err := url.Parse(imageURL)
+	fileName := u.host+u.path
+	log.Println("Rackspace filepath:", fileName)
 	cdnURL := "https://03188cc7126169c646ce-4ec321cd871e45e74b11708f248e0363.ssl.cf1.rackcdn.com/"
 	containerName := "merlin"
 	go func() {
