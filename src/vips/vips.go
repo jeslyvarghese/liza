@@ -8,6 +8,10 @@ import (
 )
 
 func ResizeImage(srcImagePath, dstImagePath string, width, height int) bool {
+	//check if file already exist, if so just return true
+	if _, err := os.Stat(dstImagePath); os.IsExist(err) {
+		return true
+	}
 	options := vips.Options{
 		Width:   width,
 		Height:  height,
