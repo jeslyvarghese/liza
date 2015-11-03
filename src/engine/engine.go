@@ -30,14 +30,14 @@ func DownloadImage(imageURL string, callback func(error, bool, string)) bool {
 	host := u.Host
 	path := u.Path
 	hl := int(math.Min(5., float64(len(host))))
-	dirPath := "/tmp/" + host[0:hl] + path[0:len(path)-len(filepath.Base(path))]
+	dirPath := "/tmp/" + RandomString(5) + path[0:len(path)-len(filepath.Base(path))]
 	log.Println("Dir path for downloads: ", dirPath)
 	if err := os.MkdirAll(dirPath, 0777); err != nil {
 		log.Println("Unable to create directories: ", dirPath, "\ncause:", err)
 		return false
 	}
 	l := int(math.Min(7, float64(len(filepath.Base(path)))))
-	destImagePath := dirPath + filepath.Base(path)[0:l] + filepath.Base(path)[len(filepath.Base(path))-l:len(filepath.Base(path))] + RandomString(5) + filepath.Ext(path)
+	destImagePath := dirPath + filepath.Base(path)[0:l] + filepath.Base(path)[len(filepath.Base(path))-l:len(filepath.Base(path))] + filepath.Ext(path)
 	log.Println("DownloadImage path assigned:", destImagePath)
 	log.Println("Path has length:", len(destImagePath))
 	urlops.DownloadImage(imageURL, destImagePath, callback)
@@ -61,7 +61,7 @@ func ResizeImage(imagePath, imageURL string) (string, bool) {
 	log.Println("Writing to path:",dstImagePath)
 	success := vips.ResizeImage(imagePath, dstImagePath, width, height)
 	if success {
-		// janitor.DeleteFile(imagePath)
+		janitor.DeleteFile(imagePath)
 		return dstImagePath, success
 	} else {
 		return "", success
@@ -75,7 +75,7 @@ func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) 
 		return
 	}
 	u, _ := url.Parse(imageURL)
-	fileName := u.Host+u.Path[0:len(u.Path)-len(filepath.Ext(u.Path))]+"/"+filepath.Base(imagePath)
+	fileName := RandomString(5)+"/"+u.Path[0:len(u.Path)-len(filepath.Ext(u.Path))]+"/"+filepath.Base(imagePath)
 	log.Println("Rackspace filepath:", fileName)
 	cdnURL := "https://03188cc7126169c646ce-4ec321cd871e45e74b11708f248e0363.ssl.cf1.rackcdn.com/"
 	containerName := "merlin"
@@ -84,7 +84,7 @@ func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) 
 			callback(nil, false, "")
 		} else {
 			callback(nil, true, cdnURL+fileName)
-			// janitor.DeleteFile(imagePath)
+			janitor.DeleteFile(imagePath)
 		}
 	}()
 }
