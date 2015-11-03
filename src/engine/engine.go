@@ -72,7 +72,7 @@ func UploadImage(imagePath, imageURL string, callback rackspace.UploadCallback) 
 		return
 	}
 	u, _ := url.Parse(imageURL)
-	fileName := u.Host+u.Path
+	fileName := u.Host+u.Path[0:len(u.Path)-len(filepath.Ext(u.Path))]+filepath.Base(imagePath)
 	log.Println("Rackspace filepath:", fileName)
 	cdnURL := "https://03188cc7126169c646ce-4ec321cd871e45e74b11708f248e0363.ssl.cf1.rackcdn.com/"
 	containerName := "merlin"
