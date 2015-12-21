@@ -11,7 +11,7 @@ type UploadCallback func(err error, isSuccess bool, uploadImageURL string)
 func UploadImage(fileURL, fileName, containerName string) bool {
 	cDallas := swift.Connection{
 		UserName: "teliportme",
-		ApiKey:   "f54540fe1c443d41a33c6f301123795b",
+		ApiKey:   "",
 		AuthUrl:  "https://auth.api.rackspacecloud.com/v1.0",
 		Region:   "DFW",
 	}
